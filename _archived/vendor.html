@@ -1,0 +1,2097 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css">
+  <link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/texmath.css">
+  <link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/vscode-texmath.css">
+
+</head>
+
+<body class="markdown-body">
+  <h1 data-line="0" class="code-line" id="part-2-%E5%88%86%E6%9E%90%E9%97%AE%E9%A2%98">part 2 分析问题</h1>
+  <p data-line="2" class="code-line">
+    <code>数字编号是幻灯片页码，不用放到标题里。</code>
+  </p>
+  <h2 data-line="4" class="code-line" id="slide-1-%E5%BB%BA%E7%AB%8B%E6%A8%A1%E5%9E%8B">slide 1 建立模型</h2>
+  <h3 data-line="6" class="code-line" id="%E5%BB%BA%E6%A8%A1%E7%9B%AE%E7%9A%84">建模目的</h3>
+  <p data-line="8" class="code-line">模拟消费者做出购买决策的过程。</p>
+  <h3 data-line="10" class="code-line" id="%E5%9F%BA%E6%9C%AC%E5%81%87%E5%AE%9A">基本假定</h3>
+  <ul>
+    <li data-line="12" class="code-line">市场里只有一家垄断企业
+      <code>比方说，一家超市</code>
+    </li>
+    <li data-line="13" class="code-line">面向一批异质性的消费者
+      <ul>
+        <li data-line="14" class="code-line">相继到达超市</li>
+        <li data-line="15" class="code-line">受到前人影响
+          <code>依据前面的顾客买这两种产品的比例</code>
+        </li>
+      </ul>
+    </li>
+    <li data-line="16" class="code-line">销售差异显著的两种产品
+      <ul>
+        <li data-line="17" class="code-line">它们互为替代品
+          <code>消费者只会买其中一种</code>
+        </li>
+      </ul>
+    </li>
+    <li data-line="18" class="code-line">这两种产品
+      <code>：标记为产品A和产品B</code>
+      <ul>
+        <li data-line="19" class="code-line">分别处在一条Hotelling line的两端</li>
+      </ul>
+    </li>
+  </ul>
+  <h2 data-line="21" class="code-line" id="slide-2-hotelling-model">slide 2 Hotelling Model</h2>
+  <ul>
+    <li data-line="23" class="code-line">Hotelling Line
+      <ul>
+        <li data-line="24" class="code-line">可以是现实空间里的一段物理距离</li>
+        <li data-line="25" class="code-line">也可以是一条描述消费者偏好的抽象线段
+          <ul>
+            <li data-line="26" class="code-line">黑T恤 白T恤</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li data-line="27" class="code-line">消费者均匀分布在
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mo>[</mo>
+                  <mn>0</mn>
+                  <mo separator="true">,</mo>
+                  <mn>1</mn>
+                  <mo>]</mo>
+                </mrow>
+                <annotation encoding="application/x-tex">[0,1]</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+            <span class="base">
+              <span class="mopen">[</span>
+              <span class="mord mathrm">0</span>
+              <span class="mpunct">,</span>
+              <span class="mord mathrm">1</span>
+              <span class="mclose">]</span>
+            </span>
+          </span>
+        </span>
+      </eq>之间</li>
+  </ul>
+  <pre class="hljs"><code><div>  画图：
+    一条数轴，从0到1，左端标0，右端标1
+  </div></code></pre>
+  <p data-line="34" class="code-line">
+    <code>（1）这条Hotelling Line象征偏好时是什么意思呢？就比方说，产品A和B是两款T恤，而这条线表示对颜色的偏好。0表示白，1表示黑。那么，如果我非常偏爱白色，那我就会落在这条线的0这个点上。如果杨翼老师特别喜欢黑色，他就会落在1这个点上。如果周俊杰对颜色没有偏好，他就会不偏不倚落在0.5的位置上。（2）消费者在这条线上均匀分布，而他所在的位置跟两端的距离，又与其对两种产品的偏好有关。</code>
+  </p>
+  <h2 data-line="36" class="code-line" id="3-%E6%95%88%E7%94%A8%E5%87%BD%E6%95%B0">3 效用函数</h2>
+  <section>
+    <eqn>
+      <span class="katex-display">
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>u</mi>
+                    <mi>A</mi>
+                  </msub>
+                  <mo>(</mo>
+                  <mrow>
+                    <mi mathvariant="bold">x</mi>
+                  </mrow>
+                  <mo>)</mo>
+                  <mo>=</mo>
+                  <msub>
+                    <mi>r</mi>
+                    <mi>A</mi>
+                  </msub>
+                  <mo>−</mo>
+                  <mi>θ</mi>
+                  <mi>δ</mi>
+                  <mo>+</mo>
+                  <msubsup>
+                    <mi>x</mi>
+                    <mi>A</mi>
+                    <mi>α</mi>
+                  </msubsup>
+                  <mo>−</mo>
+                  <mi>p</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">u_A(\bold{x})=r_A-\theta\delta+x^\alpha_A-p</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit">u</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.32833099999999993em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">A</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord">
+                <span class="mord mathbf">x</span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mrel">=</span>
+              <span class="mord">
+                <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.32833099999999993em;">
+                        <span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">A</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mbin">−</span>
+              <span class="mord mathit" style="margin-right:0.02778em;">θ</span>
+              <span class="mord mathit" style="margin-right:0.03785em;">δ</span>
+              <span class="mbin">+</span>
+              <span class="mord">
+                <span class="mord mathit">x</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.7143919999999999em;">
+                        <span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">A</span>
+                          </span>
+                        </span>
+                        <span style="top:-3.113em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.247em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mbin">−</span>
+              <span class="mord mathit">p</span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </eqn>
+  </section>
+  <section>
+    <eqn>
+      <span class="katex-display">
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>u</mi>
+                    <mi>B</mi>
+                  </msub>
+                  <mo>(</mo>
+                  <mrow>
+                    <mi mathvariant="bold">x</mi>
+                  </mrow>
+                  <mo>)</mo>
+                  <mo>=</mo>
+                  <msub>
+                    <mi>r</mi>
+                    <mi>B</mi>
+                  </msub>
+                  <mo>−</mo>
+                  <mi>θ</mi>
+                  <mo>(</mo>
+                  <mn>1</mn>
+                  <mo>−</mo>
+                  <mi>δ</mi>
+                  <mo>)</mo>
+                  <mo>+</mo>
+                  <msubsup>
+                    <mi>x</mi>
+                    <mi>B</mi>
+                    <mi>α</mi>
+                  </msubsup>
+                  <mo>−</mo>
+                  <mi>p</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">u_B(\bold{x})=r_B-\theta(1-\delta)+x^\alpha_B-p</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit">u</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.32833099999999993em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.05017em;">B</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord">
+                <span class="mord mathbf">x</span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mrel">=</span>
+              <span class="mord">
+                <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.32833099999999993em;">
+                        <span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.05017em;">B</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mbin">−</span>
+              <span class="mord mathit" style="margin-right:0.02778em;">θ</span>
+              <span class="mopen">(</span>
+              <span class="mord mathrm">1</span>
+              <span class="mbin">−</span>
+              <span class="mord mathit" style="margin-right:0.03785em;">δ</span>
+              <span class="mclose">)</span>
+              <span class="mbin">+</span>
+              <span class="mord">
+                <span class="mord mathit">x</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.7143919999999999em;">
+                        <span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.05017em;">B</span>
+                          </span>
+                        </span>
+                        <span style="top:-3.113em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.247em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mbin">−</span>
+              <span class="mord mathit">p</span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </eqn>
+  </section>
+  <ul>
+    <li data-line="41" class="code-line">基础效用
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>r</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">r</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.43056em;"></span>
+            <span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+      <code>假设两个相等</code>
+    </li>
+    <li data-line="42" class="code-line">个体偏好
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>θ</mi>
+                  <mi>δ</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">\theta\delta</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.69444em;"></span>
+            <span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.02778em;">θ</span>
+              <span class="mord mathit" style="margin-right:0.03785em;">δ</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+      <ul>
+        <li data-line="43" class="code-line">
+          <code>偏好是一个减去的项。怎么说呢？还是拿T恤来讲：这里的delta是某个消费者的偏好与商品的实际属性之间的距离。我喜欢白色，我位于数轴上的0。A是白T恤，也位于0点，而B是黑T恤，位于1点。那么，我与A的距离delta就是0，这里减去的效用也就是0；而我对于B的效用，就得要减掉theta。</code>
+        </li>
+      </ul>
+    </li>
+    <li data-line="44" class="code-line">社会影响
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msubsup>
+                    <mi>x</mi>
+                    <mi>i</mi>
+                    <mi>α</mi>
+                  </msubsup>
+                  <mo separator="true">,</mo>
+                  <mspace width="1em"></mspace>
+                  <mi>i</mi>
+                  <mo>=</mo>
+                  <mi>A</mi>
+                  <mo separator="true">,</mo>
+                  <mi>B</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">x^\alpha_i,\quad i=A,B</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.68333em;"></span>
+            <span class="strut bottom" style="height:0.941994em;vertical-align:-0.258664em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit">x</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.664392em;">
+                        <span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                        <span style="top:-3.063em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.258664em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mpunct">,</span>
+              <span class="mord mathit">
+                <span class="mspace quad"></span>
+                <span class="mord mathit">i</span>
+              </span>
+              <span class="mrel">=</span>
+              <span class="mord mathit">A</span>
+              <span class="mpunct">,</span>
+              <span class="mord mathit" style="margin-right:0.05017em;">B</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+    </li>
+    <li data-line="45" class="code-line">商品价格
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>p</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">p</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.43056em;"></span>
+            <span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span>
+            <span class="base">
+              <span class="mord mathit">p</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+    </li>
+  </ul>
+  <p data-line="47" class="code-line">
+    <code>基础效用和商品价格后面假设两种商品都一样</code>
+  </p>
+  <h2 data-line="49" class="code-line" id="4-%E7%A4%BE%E4%BC%9A%E5%BD%B1%E5%93%8D">4 社会影响</h2>
+  <ul>
+    <li data-line="51" class="code-line">社会影响
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msubsup>
+                    <mi>x</mi>
+                    <mi>i</mi>
+                    <mi>α</mi>
+                  </msubsup>
+                  <mo separator="true">,</mo>
+                  <mspace width="1em"></mspace>
+                  <mi>i</mi>
+                  <mo>=</mo>
+                  <mi>A</mi>
+                  <mo separator="true">,</mo>
+                  <mi>B</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">x^\alpha_i,\quad i=A,B</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.68333em;"></span>
+            <span class="strut bottom" style="height:0.941994em;vertical-align:-0.258664em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit">x</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.664392em;">
+                        <span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                        <span style="top:-3.063em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.258664em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mpunct">,</span>
+              <span class="mord mathit">
+                <span class="mspace quad"></span>
+                <span class="mord mathit">i</span>
+              </span>
+              <span class="mrel">=</span>
+              <span class="mord mathit">A</span>
+              <span class="mpunct">,</span>
+              <span class="mord mathit" style="margin-right:0.05017em;">B</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+    </li>
+    <li data-line="52" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>x</mi>
+                    <mi>i</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">x_i</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.43056em;"></span>
+            <span class="strut bottom" style="height:0.58056em;vertical-align:-0.15em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit">x</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.31166399999999994em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </eq>：前面所有顾客当中，购买A或者B的比例
+      <ul>
+        <li data-line="53" class="code-line">
+          <code>买某类商品的越多，这一项就越大</code>
+        </li>
+      </ul>
+    </li>
+    <li data-line="54" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>α</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">\alpha</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.43056em;"></span>
+            <span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.0037em;">α</span>
+            </span>
+          </span>
+        </span>
+      </eq>： 顾客对于社会影响的敏感程度</li>
+  </ul>
+  <h2 data-line="56" class="code-line" id="5-%E8%B4%AD%E4%B9%B0%E5%86%B3%E7%AD%96">5 购买决策</h2>
+  <h3 data-line="58" class="code-line" id="%E5%AF%B9%E5%B8%82%E5%9C%BA%E9%9C%80%E6%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%BE%E5%AE%9A">对市场需求的一些设定</h3>
+  <ul>
+    <li data-line="60" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi mathvariant="bold">N</mi>
+                    <mrow>
+                      <mi>i</mi>
+                      <mo separator="true">,</mo>
+                      <mi>t</mi>
+                    </mrow>
+                  </msub>
+                  <mo>=</mo>
+                  <mo>(</mo>
+                  <msub>
+                    <mi>N</mi>
+                    <mrow>
+                      <mi>A</mi>
+                      <mo separator="true">,</mo>
+                      <mi>t</mi>
+                    </mrow>
+                  </msub>
+                  <mo separator="true">,</mo>
+                  <msub>
+                    <mi>N</mi>
+                    <mrow>
+                      <mi>B</mi>
+                      <mo separator="true">,</mo>
+                      <mi>t</mi>
+                    </mrow>
+                  </msub>
+                  <mo>)</mo>
+                </mrow>
+                <annotation encoding="application/x-tex">\mathbf{N}_{i,t}=(N_{A,t},N_{B,t})</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord">
+                  <span class="mord mathbf">N</span>
+                </span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.311664em;">
+                        <span style="top:-2.5500000000000003em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mathit mtight">i</span>
+                              <span class="mpunct mtight">,</span>
+                              <span class="mord mathit mtight">t</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.286108em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mrel">=</span>
+              <span class="mopen">(</span>
+              <span class="mord">
+                <span class="mord mathit" style="margin-right:0.10903em;">N</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.328331em;">
+                        <span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mathit mtight">A</span>
+                              <span class="mpunct mtight">,</span>
+                              <span class="mord mathit mtight">t</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.286108em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mpunct">,</span>
+              <span class="mord">
+                <span class="mord mathit" style="margin-right:0.10903em;">N</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.328331em;">
+                        <span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mathit mtight" style="margin-right:0.05017em;">B</span>
+                              <span class="mpunct mtight">,</span>
+                              <span class="mord mathit mtight">t</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.286108em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mclose">)</span>
+            </span>
+          </span>
+        </span>
+      </eq> 到第t期为止，两种商品的总销量。</li>
+    <li data-line="61" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi mathvariant="bold">N</mi>
+                    <mn>2</mn>
+                  </msub>
+                  <mo>=</mo>
+                  <mo>(</mo>
+                  <mn>1</mn>
+                  <mo separator="true">,</mo>
+                  <mn>1</mn>
+                  <mo>)</mo>
+                </mrow>
+                <annotation encoding="application/x-tex">\mathbf{N}_2=(1,1)</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord">
+                  <span class="mord mathbf">N</span>
+                </span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.30110799999999993em;">
+                        <span style="top:-2.5500000000000003em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathrm mtight">2</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mrel">=</span>
+              <span class="mopen">(</span>
+              <span class="mord mathrm">1</span>
+              <span class="mpunct">,</span>
+              <span class="mord mathrm">1</span>
+              <span class="mclose">)</span>
+            </span>
+          </span>
+        </span>
+      </eq> 起始状态，两种产品销量相等。</li>
+    <li data-line="62" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi mathvariant="bold">X</mi>
+                    <mi>t</mi>
+                  </msub>
+                  <mo>=</mo>
+                  <mover accent="true">
+                    <mrow>
+                      <mi>x</mi>
+                    </mrow>
+                    <mo>⃗</mo>
+                  </mover>
+                </mrow>
+                <annotation encoding="application/x-tex">\mathbf{X}_t=\vec{x}</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.71444em;"></span>
+            <span class="strut bottom" style="height:0.86444em;vertical-align:-0.15em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord">
+                  <span class="mord mathbf">X</span>
+                </span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.2805559999999999em;">
+                        <span style="top:-2.5500000000000003em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">t</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mrel">=</span>
+              <span class="mord accent">
+                <span class="vlist-t">
+                  <span class="vlist-r">
+                    <span class="vlist" style="height:0.71444em;">
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="mord">
+                          <span class="mord mathit">x</span>
+                        </span>
+                      </span>
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="accent-body accent-vec" style="margin-left:0.05556em;">
+                          <span>⃗</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </eq> 到第t期为止，顾客购买两种商品的比例。</li>
+    <li data-line="63" class="code-line">marginal disutility
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>θ</mi>
+                  <mo>=</mo>
+                  <mn>1</mn>
+                </mrow>
+                <annotation encoding="application/x-tex">\theta=1</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.69444em;"></span>
+            <span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.02778em;">θ</span>
+              <span class="mrel">=</span>
+              <span class="mord mathrm">1</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+      <code>就是delta的系数</code>
+    </li>
+    <li data-line="64" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>r</mi>
+                  <mo>−</mo>
+                  <mi>p</mi>
+                  <mo>≥</mo>
+                  <mfrac>
+                    <mrow>
+                      <mn>1</mn>
+                    </mrow>
+                    <mrow>
+                      <mn>2</mn>
+                    </mrow>
+                  </mfrac>
+                </mrow>
+                <annotation encoding="application/x-tex">r-p\ge\frac{1}{2}</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.845108em;"></span>
+            <span class="strut bottom" style="height:1.190108em;vertical-align:-0.345em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+              <span class="mbin">−</span>
+              <span class="mord mathit">p</span>
+              <span class="mrel">≥</span>
+              <span class="mord">
+                <span class="mopen nulldelimiter"></span>
+                <span class="mfrac">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.845108em;">
+                        <span style="top:-2.6550000000000002em;">
+                          <span class="pstrut" style="height:3em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mathrm mtight">2</span>
+                            </span>
+                          </span>
+                        </span>
+                        <span style="top:-3.23em;">
+                          <span class="pstrut" style="height:3em;"></span>
+                          <span class="frac-line" style="border-bottom-width:0.04em;"></span>
+                        </span>
+                        <span style="top:-3.394em;">
+                          <span class="pstrut" style="height:3em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mathrm mtight">1</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.345em;"></span>
+                    </span>
+                  </span>
+                </span>
+                <span class="mclose nulldelimiter"></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </eq> 市场被完全覆盖</li>
+  </ul>
+  <h2 data-line="66" class="code-line" id="6-%E8%B4%AD%E4%B9%B0%E5%86%B3%E7%AD%96">6 购买决策</h2>
+  <ul>
+    <li data-line="68" class="code-line">第
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>t</mi>
+                  <mo>+</mo>
+                  <mn>1</mn>
+                </mrow>
+                <annotation encoding="application/x-tex">t+1</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.64444em;"></span>
+            <span class="strut bottom" style="height:0.72777em;vertical-align:-0.08333em;"></span>
+            <span class="base">
+              <span class="mord mathit">t</span>
+              <span class="mbin">+</span>
+              <span class="mord mathrm">1</span>
+            </span>
+          </span>
+        </span>
+      </eq>期到达超市的某位顾客购买商品
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>i</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">i</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.65952em;"></span>
+            <span class="strut bottom" style="height:0.65952em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit">i</span>
+            </span>
+          </span>
+        </span>
+      </eq>的概率</li>
+  </ul>
+  <section>
+    <eqn>
+      <span class="katex-display">
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>f</mi>
+                    <mi>i</mi>
+                  </msub>
+                  <mo>(</mo>
+                  <mover accent="true">
+                    <mrow>
+                      <mi>x</mi>
+                    </mrow>
+                    <mo>⃗</mo>
+                  </mover>
+                  <mo>)</mo>
+                  <mo>=</mo>
+                  <mi>P</mi>
+                  <mtext> </mtext>
+                  <mo>(</mo>
+                  <mtext> </mtext>
+                  <msub>
+                    <mi>u</mi>
+                    <mi>i</mi>
+                  </msub>
+                  <mo>(</mo>
+                  <mover accent="true">
+                    <mrow>
+                      <mi>x</mi>
+                    </mrow>
+                    <mo>⃗</mo>
+                  </mover>
+                  <mo>)</mo>
+                  <mo>≥</mo>
+                  <msub>
+                    <mi>i</mi>
+                    <mrow>
+                      <mo>−</mo>
+                      <mi>i</mi>
+                    </mrow>
+                  </msub>
+                  <mo>(</mo>
+                  <mover accent="true">
+                    <mrow>
+                      <mi>x</mi>
+                    </mrow>
+                    <mo>⃗</mo>
+                  </mover>
+                  <mo>)</mo>
+                  <mo separator="true">,</mo>
+                  <msub>
+                    <mi>u</mi>
+                    <mi>i</mi>
+                  </msub>
+                  <mo>(</mo>
+                  <mover accent="true">
+                    <mrow>
+                      <mi>x</mi>
+                    </mrow>
+                    <mo>⃗</mo>
+                  </mover>
+                  <mo>)</mo>
+                  <mo>≥</mo>
+                  <mn>0</mn>
+                  <mtext> </mtext>
+                  <mo>)</mo>
+                </mrow>
+                <annotation encoding="application/x-tex">f_i(\vec{x})=P\ (\ u_i(\vec{x})\ge i_{-i}(\vec{x}),u_i(\vec{x})\ge 0\ )</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.75em;"></span>
+            <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathit" style="margin-right:0.10764em;">f</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.31166399999999994em;">
+                        <span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord accent">
+                <span class="vlist-t">
+                  <span class="vlist-r">
+                    <span class="vlist" style="height:0.71444em;">
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="mord">
+                          <span class="mord mathit">x</span>
+                        </span>
+                      </span>
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="accent-body accent-vec" style="margin-left:0.05556em;">
+                          <span>⃗</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mrel">=</span>
+              <span class="mord mathit" style="margin-right:0.13889em;">P</span>
+              <span class="mopen">
+                <span class="mspace"> </span>
+                <span class="mopen">(</span>
+              </span>
+              <span class="mord">
+                <span class="mspace"> </span>
+                <span class="mord mathit">u</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.31166399999999994em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord accent">
+                <span class="vlist-t">
+                  <span class="vlist-r">
+                    <span class="vlist" style="height:0.71444em;">
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="mord">
+                          <span class="mord mathit">x</span>
+                        </span>
+                      </span>
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="accent-body accent-vec" style="margin-left:0.05556em;">
+                          <span>⃗</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mrel">≥</span>
+              <span class="mord">
+                <span class="mord mathit">i</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.311664em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mord mtight">−</span>
+                              <span class="mord mathit mtight">i</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.208331em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord accent">
+                <span class="vlist-t">
+                  <span class="vlist-r">
+                    <span class="vlist" style="height:0.71444em;">
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="mord">
+                          <span class="mord mathit">x</span>
+                        </span>
+                      </span>
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="accent-body accent-vec" style="margin-left:0.05556em;">
+                          <span>⃗</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mpunct">,</span>
+              <span class="mord">
+                <span class="mord mathit">u</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.31166399999999994em;">
+                        <span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">i</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mopen">(</span>
+              <span class="mord accent">
+                <span class="vlist-t">
+                  <span class="vlist-r">
+                    <span class="vlist" style="height:0.71444em;">
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="mord">
+                          <span class="mord mathit">x</span>
+                        </span>
+                      </span>
+                      <span style="top:-3em;">
+                        <span class="pstrut" style="height:3em;"></span>
+                        <span class="accent-body accent-vec" style="margin-left:0.05556em;">
+                          <span>⃗</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="mclose">)</span>
+              <span class="mrel">≥</span>
+              <span class="mord mathrm">0</span>
+              <span class="mclose">
+                <span class="mspace"> </span>
+                <span class="mclose">)</span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </eqn>
+  </section>
+  <section>
+    <eqn>
+      <span class="katex-display">
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mspace width="1em"></mspace>
+                  <mo>=</mo>
+                  <msub>
+                    <mi mathvariant="normal">Π</mi>
+                    <mrow>
+                      <mo fence="true">[</mo>
+                      <mn>0</mn>
+                      <mo separator="true">,</mo>
+                      <mn>1</mn>
+                      <mo fence="true">]</mo>
+                    </mrow>
+                  </msub>
+                  <mrow>
+                    <mo fence="true">[</mo>
+                    <mi>min</mi>
+                    <mo>{</mo>
+                    <mi>r</mi>
+                    <mo>−</mo>
+                    <mi>p</mi>
+                    <mo>+</mo>
+                    <msubsup>
+                      <mi>x</mi>
+                      <mi>i</mi>
+                      <mi>α</mi>
+                    </msubsup>
+                    <mo separator="true">,</mo>
+                    <mtext> </mtext>
+                    <mfrac>
+                      <mrow>
+                        <msubsup>
+                          <mi>x</mi>
+                          <mi>i</mi>
+                          <mi>α</mi>
+                        </msubsup>
+                        <mo>−</mo>
+                        <msubsup>
+                          <mi>x</mi>
+                          <mrow>
+                            <mo>−</mo>
+                            <mi>i</mi>
+                          </mrow>
+                          <mi>α</mi>
+                        </msubsup>
+                        <mo>+</mo>
+                        <mn>1</mn>
+                      </mrow>
+                      <mrow>
+                        <mn>2</mn>
+                      </mrow>
+                    </mfrac>
+                    <mo>}</mo>
+                    <mo fence="true">]</mo>
+                  </mrow>
+                </mrow>
+                <annotation encoding="application/x-tex">\quad =\Pi_{\left[0,1\right]}\left[\min\{r-p+x_i^\alpha,\ \frac{x^\alpha_i-x^\alpha_{-i}+1}{2}\}\right]</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:1.45em;"></span>
+            <span class="strut bottom" style="height:2.40003em;vertical-align:-0.95003em;"></span>
+            <span class="base">
+              <span class="mrel">
+                <span class="mspace quad"></span>
+                <span class="mrel">=</span>
+              </span>
+              <span class="mord">
+                <span class="mord mathrm">Π</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.34480000000000005em;">
+                        <span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="minner mtight">
+                                <span class="mopen mtight delimcenter" style="top:0em;">
+                                  <span class="mtight">[</span>
+                                </span>
+                                <span class="mord mathrm mtight">0</span>
+                                <span class="mpunct mtight">,</span>
+                                <span class="mord mathrm mtight">1</span>
+                                <span class="mclose mtight delimcenter" style="top:0em;">
+                                  <span class="mtight">]</span>
+                                </span>
+                              </span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.3551999999999999em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span class="minner">
+                <span class="mopen delimcenter" style="top:0em;">
+                  <span class="delimsizing size3">[</span>
+                </span>
+                <span class="mop">min</span>
+                <span class="mopen">{</span>
+                <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+                <span class="mbin">−</span>
+                <span class="mord mathit">p</span>
+                <span class="mbin">+</span>
+                <span class="mord">
+                  <span class="mord mathit">x</span>
+                  <span class="msupsub">
+                    <span class="vlist-t vlist-t2">
+                      <span class="vlist-r">
+                        <span class="vlist" style="height:0.7143919999999999em;">
+                          <span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;">
+                            <span class="pstrut" style="height:2.7em;"></span>
+                            <span class="sizing reset-size6 size3 mtight">
+                              <span class="mord mathit mtight">i</span>
+                            </span>
+                          </span>
+                          <span style="top:-3.113em;margin-right:0.05em;">
+                            <span class="pstrut" style="height:2.7em;"></span>
+                            <span class="sizing reset-size6 size3 mtight">
+                              <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                            </span>
+                          </span>
+                        </span>
+                        <span class="vlist-s">​</span>
+                      </span>
+                      <span class="vlist-r">
+                        <span class="vlist" style="height:0.247em;"></span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+                <span class="mpunct">,</span>
+                <span class="mord">
+                  <span class="mspace"> </span>
+                  <span class="mopen nulldelimiter"></span>
+                  <span class="mfrac">
+                    <span class="vlist-t vlist-t2">
+                      <span class="vlist-r">
+                        <span class="vlist" style="height:1.371387em;">
+                          <span style="top:-2.314em;">
+                            <span class="pstrut" style="height:3em;"></span>
+                            <span class="mord">
+                              <span class="mord mathrm">2</span>
+                            </span>
+                          </span>
+                          <span style="top:-3.23em;">
+                            <span class="pstrut" style="height:3em;"></span>
+                            <span class="frac-line" style="border-bottom-width:0.04em;"></span>
+                          </span>
+                          <span style="top:-3.706995em;">
+                            <span class="pstrut" style="height:3em;"></span>
+                            <span class="mord">
+                              <span class="mord">
+                                <span class="mord mathit">x</span>
+                                <span class="msupsub">
+                                  <span class="vlist-t vlist-t2">
+                                    <span class="vlist-r">
+                                      <span class="vlist" style="height:0.664392em;">
+                                        <span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;">
+                                          <span class="pstrut" style="height:2.7em;"></span>
+                                          <span class="sizing reset-size6 size3 mtight">
+                                            <span class="mord mathit mtight">i</span>
+                                          </span>
+                                        </span>
+                                        <span style="top:-3.063em;margin-right:0.05em;">
+                                          <span class="pstrut" style="height:2.7em;"></span>
+                                          <span class="sizing reset-size6 size3 mtight">
+                                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                                          </span>
+                                        </span>
+                                      </span>
+                                      <span class="vlist-s">​</span>
+                                    </span>
+                                    <span class="vlist-r">
+                                      <span class="vlist" style="height:0.258664em;"></span>
+                                    </span>
+                                  </span>
+                                </span>
+                              </span>
+                              <span class="mbin">−</span>
+                              <span class="mord">
+                                <span class="mord mathit">x</span>
+                                <span class="msupsub">
+                                  <span class="vlist-t vlist-t2">
+                                    <span class="vlist-r">
+                                      <span class="vlist" style="height:0.664392em;">
+                                        <span style="top:-2.441336em;margin-left:0em;margin-right:0.05em;">
+                                          <span class="pstrut" style="height:2.7em;"></span>
+                                          <span class="sizing reset-size6 size3 mtight">
+                                            <span class="mord mtight">
+                                              <span class="mord mtight">−</span>
+                                              <span class="mord mathit mtight">i</span>
+                                            </span>
+                                          </span>
+                                        </span>
+                                        <span style="top:-3.063em;margin-right:0.05em;">
+                                          <span class="pstrut" style="height:2.7em;"></span>
+                                          <span class="sizing reset-size6 size3 mtight">
+                                            <span class="mord mathit mtight" style="margin-right:0.0037em;">α</span>
+                                          </span>
+                                        </span>
+                                      </span>
+                                      <span class="vlist-s">​</span>
+                                    </span>
+                                    <span class="vlist-r">
+                                      <span class="vlist" style="height:0.316995em;"></span>
+                                    </span>
+                                  </span>
+                                </span>
+                              </span>
+                              <span class="mbin">+</span>
+                              <span class="mord mathrm">1</span>
+                            </span>
+                          </span>
+                        </span>
+                        <span class="vlist-s">​</span>
+                      </span>
+                      <span class="vlist-r">
+                        <span class="vlist" style="height:0.686em;"></span>
+                      </span>
+                    </span>
+                  </span>
+                  <span class="mclose nulldelimiter"></span>
+                </span>
+                <span class="mclose">}</span>
+                <span class="mclose delimcenter" style="top:0em;">
+                  <span class="delimsizing size3">]</span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </eqn>
+  </section>
+  <p data-line="73" class="code-line">满足市场完全覆盖条件时，上式可以化简为……</p>
+  <ul>
+    <li data-line="75" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>m</mi>
+                  <mi>i</mi>
+                  <mi>n</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">min</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.65952em;"></span>
+            <span class="strut bottom" style="height:0.65952em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit">m</span>
+              <span class="mord mathit">i</span>
+              <span class="mord mathit">n</span>
+            </span>
+          </span>
+        </span>
+      </eq>函数求出符合条件的
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>δ</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">\delta</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.69444em;"></span>
+            <span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.03785em;">δ</span>
+            </span>
+          </span>
+        </span>
+      </eq> 值</li>
+    <li data-line="76" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi mathvariant="normal">Π</mi>
+                    <mrow>
+                      <mo>[</mo>
+                      <mn>0</mn>
+                      <mo separator="true">,</mo>
+                      <mn>1</mn>
+                      <mo>]</mo>
+                    </mrow>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">\Pi_{[0,1]}</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.68333em;"></span>
+            <span class="strut bottom" style="height:1.03853em;vertical-align:-0.3551999999999999em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord mathrm">Π</span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.34480000000000005em;">
+                        <span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mtight">
+                              <span class="mopen mtight">[</span>
+                              <span class="mord mathrm mtight">0</span>
+                              <span class="mpunct mtight">,</span>
+                              <span class="mord mathrm mtight">1</span>
+                              <span class="mclose mtight">]</span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.3551999999999999em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </eq>是自定义函数：
+      <ul>
+        <li data-line="77" class="code-line">将
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mi>δ</mi>
+                    </mrow>
+                    <annotation encoding="application/x-tex">\delta</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.69444em;"></span>
+                <span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span>
+                <span class="base">
+                  <span class="mord mathit" style="margin-right:0.03785em;">δ</span>
+                </span>
+              </span>
+            </span>
+          </eq> 投影到Hotelling Line之上</li>
+      </ul>
+    </li>
+  </ul>
+  <p data-line="79" class="code-line">
+    <code>这里主要说明：用购买概率来推导最终销量</code>
+  </p>
+  <h2 data-line="81" class="code-line" id="7-%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E4%B8%8D%E5%90%8C%E6%95%8F%E6%84%9F%E7%A8%8B%E5%BA%A6">7 消费者的不同敏感程度</h2>
+  <ul>
+    <li data-line="83" class="code-line">基于对社会影响的敏感度
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>α</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">\alpha</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.43056em;"></span>
+            <span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit" style="margin-right:0.0037em;">α</span>
+            </span>
+          </span>
+        </span>
+      </eq>
+      <ul>
+        <li data-line="84" class="code-line">Impressionable
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mn>1</mn>
+                      <mo>&lt;</mo>
+                      <mi>α</mi>
+                      <mo>&lt;</mo>
+                      <mn>2</mn>
+                    </mrow>
+                    <annotation encoding="application/x-tex">1&lt;\alpha&lt;2</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.64444em;"></span>
+                <span class="strut bottom" style="height:0.68354em;vertical-align:-0.0391em;"></span>
+                <span class="base">
+                  <span class="mord mathrm">1</span>
+                  <span class="mrel">&lt;</span>
+                  <span class="mord mathit" style="margin-right:0.0037em;">α</span>
+                  <span class="mrel">&lt;</span>
+                  <span class="mord mathrm">2</span>
+                </span>
+              </span>
+            </span>
+          </eq>
+        </li>
+        <li data-line="85" class="code-line">Boundary
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mi>α</mi>
+                      <mo>=</mo>
+                      <mn>1</mn>
+                      <mtext> </mtext>
+                      <mi>o</mi>
+                      <mi>r</mi>
+                      <mtext> </mtext>
+                      <mn>2</mn>
+                    </mrow>
+                    <annotation encoding="application/x-tex">\alpha=1\ or\ 2</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.64444em;"></span>
+                <span class="strut bottom" style="height:0.64444em;vertical-align:0em;"></span>
+                <span class="base">
+                  <span class="mord mathit" style="margin-right:0.0037em;">α</span>
+                  <span class="mrel">=</span>
+                  <span class="mord mathrm">1</span>
+                  <span class="mord mathit">
+                    <span class="mspace"> </span>
+                    <span class="mord mathit">o</span>
+                  </span>
+                  <span class="mord mathit" style="margin-right:0.02778em;">r</span>
+                  <span class="mord mathrm">
+                    <span class="mspace"> </span>
+                    <span class="mord mathrm">2</span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </eq>
+        </li>
+        <li data-line="86" class="code-line">Obstinate
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mi>α</mi>
+                      <mo>&gt;</mo>
+                      <mn>2</mn>
+                    </mrow>
+                    <annotation encoding="application/x-tex">\alpha&gt;2</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.64444em;"></span>
+                <span class="strut bottom" style="height:0.68354em;vertical-align:-0.0391em;"></span>
+                <span class="base">
+                  <span class="mord mathit" style="margin-right:0.0037em;">α</span>
+                  <span class="mrel">&gt;</span>
+                  <span class="mord mathrm">2</span>
+                </span>
+              </span>
+            </span>
+          </eq>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <p data-line="88" class="code-line">
+    <code>划分为变形蜜和铁杆粉</code>
+  </p>
+  <p data-line="90" class="code-line">
+    <code>在x=0.5附近，购买概率偏离0.5的速度</code>
+  </p>
+  <pre class="hljs"><code><div>放图 Figure 2
+  </div></code></pre>
+  <h2 data-line="96" class="code-line" id="8-%E7%AC%ACinfty%E6%9C%9F%E6%97%B6%E7%9A%84%E6%9C%80%E7%BB%88%E9%94%80%E5%94%AE%E6%83%85%E5%86%B5">8 第
+    <eq>
+      <span class="katex">
+        <span class="katex-mathml">
+          <math>
+            <semantics>
+              <mrow>
+                <mi mathvariant="normal">∞</mi>
+              </mrow>
+              <annotation encoding="application/x-tex">\infty</annotation>
+            </semantics>
+          </math>
+        </span>
+        <span class="katex-html" aria-hidden="true">
+          <span class="strut" style="height:0.43056em;"></span>
+          <span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span>
+          <span class="base">
+            <span class="mord mathrm">∞</span>
+          </span>
+        </span>
+      </span>
+    </eq>期时的最终销售情况</h2>
+  <ul>
+    <li data-line="98" class="code-line">
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <mi>t</mi>
+                  <mo>→</mo>
+                  <mi mathvariant="normal">∞</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">t \to \infty</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.61508em;"></span>
+            <span class="strut bottom" style="height:0.61508em;vertical-align:0em;"></span>
+            <span class="base">
+              <span class="mord mathit">t</span>
+              <span class="mrel">→</span>
+              <span class="mord mathrm">∞</span>
+            </span>
+          </span>
+        </span>
+      </eq>时，销售比例
+      <eq>
+        <span class="katex">
+          <span class="katex-mathml">
+            <math>
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi mathvariant="bold">X</mi>
+                    <mi>t</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">\mathbf{X}_t</annotation>
+              </semantics>
+            </math>
+          </span>
+          <span class="katex-html" aria-hidden="true">
+            <span class="strut" style="height:0.68611em;"></span>
+            <span class="strut bottom" style="height:0.83611em;vertical-align:-0.15em;"></span>
+            <span class="base">
+              <span class="mord">
+                <span class="mord">
+                  <span class="mord mathbf">X</span>
+                </span>
+                <span class="msupsub">
+                  <span class="vlist-t vlist-t2">
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.2805559999999999em;">
+                        <span style="top:-2.5500000000000003em;margin-right:0.05em;">
+                          <span class="pstrut" style="height:2.7em;"></span>
+                          <span class="sizing reset-size6 size3 mtight">
+                            <span class="mord mathit mtight">t</span>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="vlist-s">​</span>
+                    </span>
+                    <span class="vlist-r">
+                      <span class="vlist" style="height:0.15em;"></span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </eq>
+      <ul>
+        <li data-line="99" class="code-line">Impressionalbe 趋向
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mo>{</mo>
+                      <mn>0</mn>
+                      <mo separator="true">,</mo>
+                      <mn>1</mn>
+                      <mo>}</mo>
+                    </mrow>
+                    <annotation encoding="application/x-tex">\{0,1\}</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.75em;"></span>
+                <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+                <span class="base">
+                  <span class="mopen">{</span>
+                  <span class="mord mathrm">0</span>
+                  <span class="mpunct">,</span>
+                  <span class="mord mathrm">1</span>
+                  <span class="mclose">}</span>
+                </span>
+              </span>
+            </span>
+          </eq>，等概率；</li>
+        <li data-line="100" class="code-line">Boundary
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mo>[</mo>
+                      <mn>0</mn>
+                      <mo separator="true">,</mo>
+                      <mn>1</mn>
+                      <mo>]</mo>
+                    </mrow>
+                    <annotation encoding="application/x-tex">[0,1]</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.75em;"></span>
+                <span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span>
+                <span class="base">
+                  <span class="mopen">[</span>
+                  <span class="mord mathrm">0</span>
+                  <span class="mpunct">,</span>
+                  <span class="mord mathrm">1</span>
+                  <span class="mclose">]</span>
+                </span>
+              </span>
+            </span>
+          </eq>，均匀分布</li>
+        <li data-line="101" class="code-line">Obstinate 常数
+          <eq>
+            <span class="katex">
+              <span class="katex-mathml">
+                <math>
+                  <semantics>
+                    <mrow>
+                      <mfrac>
+                        <mrow>
+                          <mn>1</mn>
+                        </mrow>
+                        <mrow>
+                          <mn>2</mn>
+                        </mrow>
+                      </mfrac>
+                    </mrow>
+                    <annotation encoding="application/x-tex">\frac{1}{2}</annotation>
+                  </semantics>
+                </math>
+              </span>
+              <span class="katex-html" aria-hidden="true">
+                <span class="strut" style="height:0.845108em;"></span>
+                <span class="strut bottom" style="height:1.190108em;vertical-align:-0.345em;"></span>
+                <span class="base">
+                  <span class="mord">
+                    <span class="mopen nulldelimiter"></span>
+                    <span class="mfrac">
+                      <span class="vlist-t vlist-t2">
+                        <span class="vlist-r">
+                          <span class="vlist" style="height:0.845108em;">
+                            <span style="top:-2.6550000000000002em;">
+                              <span class="pstrut" style="height:3em;"></span>
+                              <span class="sizing reset-size6 size3 mtight">
+                                <span class="mord mtight">
+                                  <span class="mord mathrm mtight">2</span>
+                                </span>
+                              </span>
+                            </span>
+                            <span style="top:-3.23em;">
+                              <span class="pstrut" style="height:3em;"></span>
+                              <span class="frac-line" style="border-bottom-width:0.04em;"></span>
+                            </span>
+                            <span style="top:-3.394em;">
+                              <span class="pstrut" style="height:3em;"></span>
+                              <span class="sizing reset-size6 size3 mtight">
+                                <span class="mord mtight">
+                                  <span class="mord mathrm mtight">1</span>
+                                </span>
+                              </span>
+                            </span>
+                          </span>
+                          <span class="vlist-s">​</span>
+                        </span>
+                        <span class="vlist-r">
+                          <span class="vlist" style="height:0.345em;"></span>
+                        </span>
+                      </span>
+                    </span>
+                    <span class="mclose nulldelimiter"></span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </eq>，销量对半分</li>
+      </ul>
+    </li>
+  </ul>
+
+</body>
+
+</html>

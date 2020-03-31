@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #themap {
+            width: 100%;
+            height: 95%;
+        }
+
+        p {
+            width: 100%;
+            height: 10%;
+            font-family: "宋体", sans-serif;
+            margin-bottom: 5;
+            text-align: center;
+            color: blue;
+            font-weight: bolder;
+        }
+    </style>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=qTZvxSyubtmMIkbAaK6o0L8BWYCbY2ps"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js"></script>
+    <title>月牙楼在哪里呀</title>
+</head>
+
+<body>
+    <div id="themap"></div>
+    <p>李嘉宁 3150101123 信管1501</p>
+</body>
+<!--我们不生产代码，只是代码的搬运工。——一名面向技术博客编程的信管学子。-->
+
+</html>
+<script type="text/javascript">
+    //百度地图API功能	
+    var map = new BMap.Map("themap");
+    var mapstyle = { style: "grayscale" };
+    map.setMapStyle(mapstyle);
+    //map.centerAndZoom(new BMap.Point(116.404, 39.915), 16);
+    map.enableScrollWheelZoom();
+    map.centerAndZoom("浙江大学紫金港校区", 17);
+    //var b = new BMap.Bounds(new BMap.Point(116.027143, 39.772348), new BMap.Point(116.832025, 40.126349));
+    /*try {
+        BMapLib.AreaRestriction.setBounds(map, b);
+    } catch (e) {
+        alert(e);
+    }*/
+    var marker = new BMap.Marker(new BMap.Point(120.092638, 30.310906)); // 创建点
+    marker.addEventListener("click", attribute);
+    map.addOverlay(marker);    //增加点
+
+    function attribute() {
+        var p = marker.getPosition();  //获取marker的位置
+        alert("月牙楼的位置是" + p.lng + "," + p.lat);
+    }
+</script>
