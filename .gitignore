@@ -1,5 +1,6 @@
 _site
 _posts/_draft
+_draft
 _posts/_archive
 _archive
 node_modules
@@ -11,3 +12,7 @@ node_modules
 .jekyll-cache
 */.DS_Store
 */*/.DS_Store
+_posts/**/-*.md
+# _posts/*.md
+_posts/**/*.md
+!_posts/**/[0-9][0-9]??-[0-9]*.md
